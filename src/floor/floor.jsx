@@ -32,10 +32,10 @@ class Floor extends React.PureComponent {
 
     return (
         <div className="floor" style={this.getStyles()}>
-            <div class="floor__level">
+            <div className="floor__level">
               <span> Floor No. {level}</span>
             </div>
-            <div class="floor__indicator">
+            <div className="floor__indicator">
               <FloorButton
                 level={level}
                 direction={directions.UP}

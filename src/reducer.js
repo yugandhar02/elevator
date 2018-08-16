@@ -2,23 +2,20 @@ import * as actions from './actions';
 import * as directions from './directions';
 
 export const initialState = {
-  pendingRequests: [],
+  boardingRequests: [],
   elevators: {}
 };
 
 export default (state = initialState, action) => {
   switch(action.type) {
     case actions.REGISTER_ELEVATOR:
-      handleRegisterElevator(state, action);
-      break;
+      return handleRegisterElevator(state, action);
 
     case actions.REQUEST_ELEVATOR:
-      handleRequestElevator(state, action);
-      break;
+      return handleRequestElevator(state, action);
 
     case actions.REQUEST_STOPAGE:
-      handleRequestStopage(state, action);
-      break;
+      return handleRequestStopage(state, action);
 
     default:
       return state;
@@ -26,7 +23,9 @@ export default (state = initialState, action) => {
 };
 
 function handleRegisterElevator(state, action) {
-  return updateElevatorState(state, action.elevatorId, {
+  const { elevatorId } = action;
+
+  return updateElevatorState(state, elevatorId, {
     id: elevatorId,
     direction: directions.NONE,
     currentFloor: 0,
@@ -41,16 +40,16 @@ function handleRequestElevator(state, action) {
     direction
   } = action;
 
-  const existingRequest = state.pendingRequests.find((pendingRequest) => 
+  const existingRequest = state.boardingRequests.find((pendingRequest) => 
     floorLevel === pendingRequest.floorLevel &&
-    direction === pendingRequests.direction
+    direction === pendingRequest.direction
   );
 
   if (existingRequest) {
     return state;
   }
 
-  const pendingRequests = state.pendingRequests.concat({
+  const boardingRequests = state.boardingRequests.concat({
     floorLevel,
     direction
   });
@@ -58,7 +57,7 @@ function handleRequestElevator(state, action) {
   const nearestElevator = getNearestElevator(state, floorLevel, direction);
   const newState = addStopage(state, nearestElevator, floorLevel);
 
-  return Object.assign({}, newState, { pendingRequests })
+  return Object.assign({}, newState, { boardingRequests })
 }
 
 function handleRequestStopage(state, action) {
@@ -73,7 +72,7 @@ function handleRequestStopage(state, action) {
 
   // toggle request
   if (hasExistingRequest) {
-    const hasPendingBoardingRequest = state.pendingRequests.find((pendingRequest) => 
+    const hasPendingBoardingRequest = state.boardingRequests.find((pendingRequest) => 
       pendingRequest.direction === elevatorState.direction &&
       pendingRequest.floorLevel === floorLevel
     );

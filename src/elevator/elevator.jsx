@@ -16,14 +16,14 @@ export default class Elevator extends React.PureComponent {
     super(props);
 
     this.state = {
-      nextStopage,
+      nextStopage: -1,
     };
 
     this.motionTimerId = null;
     this.handleButtonClick = this.handleButtonClick.bind(this);
   }
 
-  componentDidMount() {
+  componentWillMount() {
     const {
       id,
       onRegisterElevator,
@@ -56,7 +56,7 @@ export default class Elevator extends React.PureComponent {
     } = this.props;
 
     let buttons = [];
-    for (let index = 1; index <= floorsCount; i++) {
+    for (let index = 1; index <= floorsCount; index++) {
       buttons.push(
         <ElevatorButton
           key={index}

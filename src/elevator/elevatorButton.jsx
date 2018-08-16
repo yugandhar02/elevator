@@ -5,7 +5,7 @@ import classnames from 'classnames';
 class ElevatorButton extends React.PureComponent {
     static propTypes = {
         floorNumber: PropTypes.number,
-        requests: PropTypes.object,
+        requests: PropTypes.array,
         onClick: PropTypes.func,
     }
 

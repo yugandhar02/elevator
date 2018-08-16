@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Floor from '../floor/floor';
-import Elevator from '../elevator/elevator';
+import Floor from '../floor/container';
+import Elevator from '../elevator/container';
 
 export default class Building extends React.PureComponent {
   static propTypes = {
@@ -16,7 +16,7 @@ export default class Building extends React.PureComponent {
     } = this.props;
 
     let floors = [];
-    for (index = 0; index < floorsCount; index++) {
+    for (let index = 0; index < floorsCount; index++) {
       floors.push(
         <Floor 
           key={index}

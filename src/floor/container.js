@@ -3,9 +3,9 @@ import * as selectors from '../selectors';
 import * as actions from '../actions';
 import Floor from './floor';
 
-const mapStateToProps = (state, ownProps) => {
-    pendingRequest: selectors.getPendingRequestsForFloor(state, ownProps.level)
-};
+const mapStateToProps = (state, ownProps) => ({
+    pendingRequest: selectors.getboardingRequestsForFloor(state, ownProps.level)
+});
 
 const mapDispatchToProps = {
     onElevatorRequest: actions.requestElevator,

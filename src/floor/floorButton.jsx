@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
-import directions from '../directions';
+import * as directions from '../directions';
 
 class FloorButton extends React.PureComponent {
     static propTypes = {

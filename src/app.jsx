@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import Building from './building';
+import Building from './building/building';
 
 class App extends React.PureComponent {
   render () {
@@ -14,3 +14,5 @@ class App extends React.PureComponent {
     );
   }
 }
+
+export default App;
