@@ -51,6 +51,7 @@ export default class Elevator extends React.PureComponent {
   render () {
     const {
       id,
+      style,
       floorsCount,
       requests,
     } = this.props;
@@ -68,9 +69,9 @@ export default class Elevator extends React.PureComponent {
     }
 
     return (
-        <div className="elevator" style={this.getStyle()}>
-          <div className="elevator__header">ELEVATOR {id}</div>
-          <div className="elevator__control-panel">
+        <div className="building__elevator" style={style}>
+          <div className="building__elevator-header">{id}</div>
+          <div className="building__elevator-control-panel">
             {buttons}
           </div>
         </div>

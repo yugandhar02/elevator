@@ -7,45 +7,34 @@ class Floor extends React.PureComponent {
   static propTypes = {
     level: PropTypes.number,
     height: PropTypes.number,
-    pendingRequest: PropTypes.object,
+    pendingRequests: PropTypes.array,
     onElevatorRequest: PropTypes.func,
-  }
-
-  getStyles() {
-    const {
-      level,
-      height,
-    } = this.props;
-
-    return {
-      bottom: level * height,
-      height: height,
-    };
   }
 
   render () {
     const {
+      style,
       level,
-      pendingRequest,
+      pendingRequests,
       onElevatorRequest
     } = this.props;
 
     return (
-        <div className="floor" style={this.getStyles()}>
-            <div className="floor__level">
+        <div className="building__floor" style={style}>
+            <div className="building__floor-header">
               <span> Floor No. {level}</span>
             </div>
-            <div className="floor__indicator">
+            <div className="building__floor-button-panel">
               <FloorButton
                 level={level}
                 direction={directions.UP}
-                pendingRequest={pendingRequest}
+                pendingRequests={pendingRequests}
                 onClick={onElevatorRequest}
               />
               <FloorButton
                 level={level}
                 direction={directions.DOWN}
-                pendingRequest={pendingRequest}
+                pendingRequests={pendingRequests}
                 onClick={onElevatorRequest}
               />
             </div>

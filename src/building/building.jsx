@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import Floor from '../floor/container';
 import Elevator from '../elevator/container';
@@ -6,37 +6,53 @@ import Elevator from '../elevator/container';
 export default class Building extends React.PureComponent {
   static propTypes = {
     floorsCount: PropTypes.number,
+    elevatorsCount: PropTypes.number,
     floorHeight: PropTypes.number
   }
 
   render () {
     const {
       floorsCount,
-      floorHeight,
+      elevatorsCount,
+      floorHeight
     } = this.props;
 
     let floors = [];
-    for (let index = 0; index < floorsCount; index++) {
+    let elevators = [];
+    for (let index = floorsCount; index > 0; index--) {
+      const style = {
+        height: floorHeight,
+      };
+
       floors.push(
         <Floor 
           key={index}
           level={index}
+          style={style}
           height={floorHeight}
         />
       );
     }
 
+    for (let index = elevatorsCount; index > 0; index--) {
+      const style = {
+        left: (index - 1)* 100 + 200
+      }
+
+      elevators.push(
+        <Elevator 
+          key={index}
+          id={`Elevator-${index}`}
+          style={style}
+          floorsCount={floorsCount}
+        />
+      )
+    }
+
     return (
       <div className="building">
-        <div className="building__floors">
-          {floors}
-        </div>
-        <div className="building__elevators">
-          <Elevator 
-            id='test'
-            floorsCount={floorsCount}
-          />
-        </div>
+        {floors}
+        {elevators}
       </div>
     );
   }

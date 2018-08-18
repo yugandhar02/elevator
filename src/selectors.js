@@ -15,5 +15,5 @@ export const getElevatorRequests = (state, elevatorId) =>
 export const getboardingRequestsForFloor = (state, floorLevel) => {
     const boardingRequests = getboardingRequests(state);
 
-    return boardingRequests.find((pendingRequest) => pendingRequest.floorLevel === floorLevel) || defaultBoardingRequests;
+    return boardingRequests.filter((pendingRequest) => pendingRequest.floorLevel === floorLevel) || defaultBoardingRequests;
 }

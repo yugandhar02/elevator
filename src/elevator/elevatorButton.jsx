@@ -31,8 +31,8 @@ class ElevatorButton extends React.PureComponent {
         } = this.props;
 
         const isActive = requests.find((stopage) => stopage === floorNumber);
-        const buttonClasses = classnames('elevator-button', {
-            'elevator-button--active': isActive
+        const buttonClasses = classnames('building__elevator-button', {
+            'building__elevator-button--active': isActive
         });
 
         return (

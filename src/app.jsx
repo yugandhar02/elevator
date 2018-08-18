@@ -7,8 +7,9 @@ class App extends React.PureComponent {
     return (
       <div style={{width: "800px"}}>
         <Building
-          floorHeight={100}
+          floorHeight={200}
           floorsCount={8}
+          elevatorsCount={1}
         />
       </div>
     );

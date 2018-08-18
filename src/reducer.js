@@ -64,7 +64,7 @@ function handleRequestStopage(state, action) {
   const {
     elevatorId,
     floorLevel
-  } = actions;
+  } = action;
 
   const elevatorState = state.elevators[elevatorId];
   const hasExistingRequest = find(elevatorState.requests, (requestedFloor) => 
