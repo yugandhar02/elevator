@@ -1,11 +1,10 @@
 import React from 'react';
-import { connect } from 'react-redux';
 import Building from './building/building';
 
 class App extends React.PureComponent {
   render () {
     return (
-      <div style={{width: "800px"}}>
+      <div style={{ width: '800px' }}>
         <Building
           floorHeight={200}
           floorsCount={8}

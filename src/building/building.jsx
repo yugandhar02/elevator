@@ -8,7 +8,7 @@ export default class Building extends React.PureComponent {
     floorsCount: PropTypes.number,
     elevatorsCount: PropTypes.number,
     floorHeight: PropTypes.number
-  }
+  };
 
   render () {
     const {
@@ -45,6 +45,7 @@ export default class Building extends React.PureComponent {
           id={`Elevator-${index}`}
           style={style}
           floorsCount={floorsCount}
+          floorHeight={floorHeight}
         />
       )
     }

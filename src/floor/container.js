@@ -8,7 +8,7 @@ const mapStateToProps = (state, ownProps) => ({
 });
 
 const mapDispatchToProps = {
-    onElevatorRequest: actions.requestElevator,
+    onElevatorRequest: actions.requestElevator
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Floor);

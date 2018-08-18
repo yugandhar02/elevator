@@ -8,7 +8,7 @@ class Floor extends React.PureComponent {
     level: PropTypes.number,
     height: PropTypes.number,
     boardingRequests: PropTypes.array,
-    onElevatorRequest: PropTypes.func,
+    onElevatorRequest: PropTypes.func
   }
 
   render () {
@@ -20,11 +20,11 @@ class Floor extends React.PureComponent {
     } = this.props;
 
     return (
-        <div className="building__floor" style={style}>
-            <div className="building__floor-header">
+        <div className='building__floor' style={style}>
+            <div className='building__floor-header'>
               <span> Floor No. {level}</span>
             </div>
-            <div className="building__floor-button-panel">
+            <div className='building__floor-button-panel'>
               <FloorButton
                 level={level}
                 direction={directions.UP}

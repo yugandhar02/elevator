@@ -8,7 +8,7 @@ class FloorButton extends React.PureComponent {
         level: PropTypes.number,
         direction: PropTypes.string,
         boardingRequests: PropTypes.array,
-        onClick: PropTypes.func,
+        onClick: PropTypes.func
     }
 
     constructor(props) {
@@ -21,7 +21,7 @@ class FloorButton extends React.PureComponent {
         const {
             level,
             direction,
-            onClick,
+            onClick
         } = this.props;
 
         onClick(level, direction);
@@ -29,9 +29,8 @@ class FloorButton extends React.PureComponent {
 
     render() {
         const {
-            level,
             direction,
-            boardingRequests,
+            boardingRequests
         } = this.props;
         const isUp = direction === directions.UP;
         const isActive = Boolean(boardingRequests.find((pendingRequest) => pendingRequest.direction === direction));
