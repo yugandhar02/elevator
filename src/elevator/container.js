@@ -4,7 +4,7 @@ import * as actions from '../actions';
 import Elevator from './elevator';
 
 const mapStateToProps = (state, ownProps) => ({
-    requests: selectors.getElevatorRequests(state, ownProps.id)
+    destinationRequests: selectors.getElevatorDestinationRequests(state, ownProps.id)
 });
 
 const mapDispatchToProps = {

@@ -5,7 +5,7 @@ import classnames from 'classnames';
 class ElevatorButton extends React.PureComponent {
     static propTypes = {
         floorNumber: PropTypes.number,
-        requests: PropTypes.array,
+        destinationRequests: PropTypes.array,
         onClick: PropTypes.func,
     }
 
@@ -27,10 +27,10 @@ class ElevatorButton extends React.PureComponent {
     render() {
         const {
             floorNumber,
-            requests,
+            destinationRequests,
         } = this.props;
 
-        const isActive = requests.find((stopage) => stopage === floorNumber);
+        const isActive = destinationRequests.find((destinationRequest) => destinationRequest === floorNumber);
         const buttonClasses = classnames('building__elevator-button', {
             'building__elevator-button--active': isActive
         });

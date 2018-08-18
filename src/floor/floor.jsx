@@ -7,7 +7,7 @@ class Floor extends React.PureComponent {
   static propTypes = {
     level: PropTypes.number,
     height: PropTypes.number,
-    pendingRequests: PropTypes.array,
+    boardingRequests: PropTypes.array,
     onElevatorRequest: PropTypes.func,
   }
 
@@ -15,7 +15,7 @@ class Floor extends React.PureComponent {
     const {
       style,
       level,
-      pendingRequests,
+      boardingRequests,
       onElevatorRequest
     } = this.props;
 
@@ -28,13 +28,13 @@ class Floor extends React.PureComponent {
               <FloorButton
                 level={level}
                 direction={directions.UP}
-                pendingRequests={pendingRequests}
+                boardingRequests={boardingRequests}
                 onClick={onElevatorRequest}
               />
               <FloorButton
                 level={level}
                 direction={directions.DOWN}
-                pendingRequests={pendingRequests}
+                boardingRequests={boardingRequests}
                 onClick={onElevatorRequest}
               />
             </div>

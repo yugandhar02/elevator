@@ -4,7 +4,7 @@ import * as actions from '../actions';
 import Floor from './floor';
 
 const mapStateToProps = (state, ownProps) => ({
-    pendingRequests: selectors.getboardingRequestsForFloor(state, ownProps.level)
+    boardingRequests: selectors.getboardingRequestsForFloor(state, ownProps.level)
 });
 
 const mapDispatchToProps = {

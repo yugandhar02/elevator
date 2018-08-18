@@ -7,7 +7,7 @@ class FloorButton extends React.PureComponent {
     static propTypes = {
         level: PropTypes.number,
         direction: PropTypes.string,
-        pendingRequests: PropTypes.array,
+        boardingRequests: PropTypes.array,
         onClick: PropTypes.func,
     }
 
@@ -31,10 +31,10 @@ class FloorButton extends React.PureComponent {
         const {
             level,
             direction,
-            pendingRequests,
+            boardingRequests,
         } = this.props;
         const isUp = direction === directions.UP;
-        const isActive = Boolean(pendingRequests.find((pendingRequest) => pendingRequest.direction === direction));
+        const isActive = Boolean(boardingRequests.find((pendingRequest) => pendingRequest.direction === direction));
         const buttonClasses = classnames('building__floor-indicator', {
             'building__floor-indicator--up': isUp,
             'building__floor-indicator--down': !isUp,

@@ -7,7 +7,7 @@ const timeBetweenTwoFloors = 500;
 export default class Elevator extends React.PureComponent {
   static propTypes = {
     id: PropTypes.string,
-    requests: PropTypes.array,
+    destinationRequests: PropTypes.array,
     onRegisterElevator: PropTypes.func,
     onElevatorButtonClick: PropTypes.func,
   }
@@ -53,7 +53,7 @@ export default class Elevator extends React.PureComponent {
       id,
       style,
       floorsCount,
-      requests,
+      destinationRequests,
     } = this.props;
 
     let buttons = [];
@@ -62,7 +62,7 @@ export default class Elevator extends React.PureComponent {
         <ElevatorButton
           key={index}
           floorNumber={index}
-          requests={requests}
+          destinationRequests={destinationRequests}
           onClick={this.handleButtonClick}
         />
       )

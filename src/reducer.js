@@ -12,7 +12,7 @@ export default (state = initialState, action) => {
       return handleRegisterElevator(state, action);
 
     case actions.REQUEST_ELEVATOR:
-      return handleRequestElevator(state, action);
+      return handleBoardingElevator(state, action);
 
     case actions.REQUEST_STOPAGE:
       return handleRequestStopage(state, action);
@@ -30,34 +30,41 @@ function handleRegisterElevator(state, action) {
     direction: directions.NONE,
     currentFloor: 0,
     stopages: [],
-    requests: [],
+    destinationRequests: [],
   })
 }
 
-function handleRequestElevator(state, action) {
+function handleBoardingElevator(state, action) {
   const {
     floorLevel,
     direction
   } = action;
 
-  const existingRequest = state.boardingRequests.find((pendingRequest) => 
-    floorLevel === pendingRequest.floorLevel &&
-    direction === pendingRequest.direction
+  const existingBoardingRequest = state.boardingRequests.find((boardingRequest) => 
+    floorLevel === boardingRequest.floorLevel &&
+    direction === boardingRequest.direction
   );
 
-  if (existingRequest) {
+  if (existingBoardingRequest) {
     return state;
   }
 
-  const boardingRequests = state.boardingRequests.concat({
+  const nextBoardingRequests = state.boardingRequests.concat({
     floorLevel,
     direction
   });
 
   const nearestElevator = getNearestElevator(state, floorLevel, direction);
-  const newState = addStopage(state, nearestElevator, floorLevel);
+  if (!nearestElevator) {
+    return Object.assign({}, state, { 
+      boardingRequests: nextBoardingRequests
+    })
+  }
 
-  return Object.assign({}, newState, { boardingRequests })
+  const newState = addStopage(state, nearestElevator, floorLevel);
+  return Object.assign({}, newState, { 
+    boardingRequests: nextBoardingRequests
+  })
 }
 
 function handleRequestStopage(state, action) {
@@ -67,7 +74,11 @@ function handleRequestStopage(state, action) {
   } = action;
 
   const elevatorState = state.elevators[elevatorId];
-  const hasExistingRequest = find(elevatorState.requests, (requestedFloor) => 
+  if(!elevatorState) {
+    return state;
+  }
+
+  const hasExistingRequest = elevatorState.destinationRequests.find((requestedFloor) => 
     requestedFloor === floorLevel);
 
   // toggle request
@@ -81,14 +92,14 @@ function handleRequestStopage(state, action) {
       elevatorState.stopages.filter((stopage) => stopage === floorLevel);
 
     return updateElevatorState(newState, elevatorId, {
-      requests: elevatorState.requests.filter((requestedFloor) => requestedFloor === floorLevel),
+      destinationRequests: elevatorState.destinationRequests.filter((requestedFloor) => requestedFloor === floorLevel),
       stopages: nextStopages,
     })
   }
 
   const newState = addStopage(state, elevatorId, floorLevel);
   return updateElevatorState(newState, elevatorId, {
-    requests: elevatorState.requests.concat(floorLevel)
+    destinationRequests: elevatorState.destinationRequests.concat(floorLevel)
   })
 }
 
@@ -119,18 +130,17 @@ function addStopage(state, elevatorId, floorLevel) {
   }
 
   const nextStopages = stopages.concat(floorLevel);
-  const nextElevatorState = Object.assign({}, elevatorState, {
+
+  return updateElevatorState(state, elevatorId, {
     direction: nextDirection,
-    stopages: nextStopages.sort(() => {
+    stopages: nextStopages.sort((a, b) => {
       if (direction === directions.UP) {
-        return -1;
+        return a - b;
       }
 
-      return 1;
+      return b - a;
     })
   });
-
-  return updateElevatorState(state, elevatorId, nextElevatorState);
 }
 
 function getNearestElevator(state, floorLevel, direction) {
@@ -141,22 +151,30 @@ function getNearestElevator(state, floorLevel, direction) {
 
   elevatorsIds.forEach((elevatorId) => {
     const elevatorState = elevators[elevatorId];
+    const isGoingUp = elevatorState.direction === directions.UP;
+    const lastDestination = isGoingUp ?
+      Math.max.apply(null, elevatorState.destinationRequests) :
+      Math.min.apply(null, elevatorState.destinationRequests);
 
-    if ((elevatorState.direction === direction || elevatorState.direction === directions.NONE) &&
-      minDist > Math.abs(elevatorState.currentFloor - floorLevel)) {
+    const canGoToFloor = elevatorState.direction === directions.NONE ||
+    isGoingUp ? direction === directions.UP && floorLevel < lastDestination : 
+    direction === directions.DOWN && floorLevel > lastDestination;
 
-        minDist = Math.abs(elevatorState.currentFloor - floorLevel);
-        nearestElevatorId = elevatorId;
-      }
+    if (canGoToFloor && minDist > Math.abs(elevatorState.currentFloor - floorLevel)) {
+      minDist = Math.abs(elevatorState.currentFloor - floorLevel);
+      nearestElevatorId = elevatorId;
+    }
   })
   
   return nearestElevatorId;
 }
 
 function updateElevatorState(state, elevatorId, elevatorState) {
+  const nextElevatorState = Object.assign({}, state.elevators[elevatorId], elevatorState);
+
   return Object.assign({}, state, {
     elevators: Object.assign({}, state.elevators, {
-      [elevatorId]: elevatorState
+      [elevatorId]: nextElevatorState
     })
   })
 }

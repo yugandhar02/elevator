@@ -1,6 +1,6 @@
 const defaultElevatorState = {
     stopages: [],
-    requests: []
+    destinationRequests: []
 };
 const defaultBoardingRequests = [];
 
@@ -9,11 +9,11 @@ export const getElevatorState = (state, elevatorId) => state.elevators[elevatorI
 export const getElevatorStopages = (state, elevatorId) => 
     getElevatorState(state, elevatorId).stopages;
 
-export const getElevatorRequests = (state, elevatorId) => 
-    getElevatorState(state, elevatorId).requests;
+export const getElevatorDestinationRequests = (state, elevatorId) => 
+    getElevatorState(state, elevatorId).destinationRequests;
 
 export const getboardingRequestsForFloor = (state, floorLevel) => {
     const boardingRequests = getboardingRequests(state);
 
-    return boardingRequests.filter((pendingRequest) => pendingRequest.floorLevel === floorLevel) || defaultBoardingRequests;
+    return boardingRequests.filter((boardingRequest) => boardingRequest.floorLevel === floorLevel) || defaultBoardingRequests;
 }
