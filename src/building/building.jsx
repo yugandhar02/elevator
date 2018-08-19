@@ -35,8 +35,9 @@ export default class Building extends React.PureComponent {
     }
 
     for (let index = elevatorsCount; index > 0; index--) {
+      const offset = index > 1 ? 210 : 200;
       const style = {
-        left: (index - 1)* 100 + 200
+        left: (index - 1)* 100 + offset,
       }
 
       elevators.push(

@@ -158,10 +158,10 @@ function handleUpdateCurrentFloor(state, action) {
   const nextDestinationRequests = destinationRequests.filter(destinationRequest => 
     destinationRequest !== currentFloor);
 
-  const nextBoardingRequests = state.boardingRequests.filter(boardingRequest =>
+  let nextBoardingRequests = state.boardingRequests.filter(boardingRequest =>
     boardingRequest.floorLevel !== currentFloor ||
     boardingRequest.direction !== direction);
-  
+
   const shouldOpenDoor = nextDestinationRequests.length !== destinationRequests.length ||
     nextBoardingRequests.length !== state.boardingRequests.length;
 
@@ -183,9 +183,18 @@ function handleUpdateCurrentFloor(state, action) {
     }
 
     const nearestFloor = getNearestOnboardingFloor(nextBoardingRequests, nextElevatorState);
-    const nextDirection = nearestFloor > currentFloor ? 
-      directions.UP :
-      directions.DOWN;
+
+    let nextDirection = direction;
+    if (nearestFloor === currentFloor) {
+      nextBoardingRequests = nextBoardingRequests.filter((request) =>
+        request.floorLevel !== currentFloor);
+
+      nextDirection = directions.NONE;
+    } else if (nearestFloor > currentFloor) {
+      nextDirection = directions.UP
+    } else {
+      nextDirection = directions.DOWN
+    }
 
     newState = updateElevatorState(state, elevatorId, {
       currentFloor,
@@ -268,10 +277,6 @@ function canGoToFloor(elevatorState, floor) {
     currentFloor
   } = elevatorState;
 
-  if (floor === currentFloor) {
-    return false;
-  }
-
   if (direction === directions.UP) {
     return floor > currentFloor;
   }
@@ -280,8 +285,8 @@ function canGoToFloor(elevatorState, floor) {
     return floor < currentFloor;
   }
   
-  // idle elevator can go to any floor
-  return true;
+  // idle elevator can go to any floor except same
+  return currentFloor !== floor;
 }
 
 function getNearestOnboardingFloor(boardingRequests, elevatorState) {
@@ -307,18 +312,18 @@ function getNearestOnboardingFloor(boardingRequests, elevatorState) {
     }
   }
 
-  const updatedElevatorState = Object.assign({
+  const updatedElevatorState = Object.assign({}, elevatorState, {
     direction: direction === directions.UP ?
       directions.DOWN :
       directions.UP
-  }, elevatorState);
+  });
 
   const floorsWithSameRequestDirection = boardingRequests.filter(request =>
     request.direction === updatedElevatorState.direction);
 
   if (floorsWithSameRequestDirection.length > 0) {
     const floors = floorsWithSameRequestDirection.map(request => request.floorLevel);
-    return getNearestDestination(elevatorState, floors);
+    return getNearestDestination(updatedElevatorState, floors);
   }
 
   const floorsWithOppRequestDirection = boardingRequests.filter(request =>
@@ -326,7 +331,7 @@ function getNearestOnboardingFloor(boardingRequests, elevatorState) {
 
   if (floorsWithOppRequestDirection.length > 0) {
     const floors = floorsWithOppRequestDirection.map(request => request.floorLevel);
-    return getNearestDestination(elevatorState, floors);
+    return getNearestDestination(updatedElevatorState, floors);
   }
 }
 
