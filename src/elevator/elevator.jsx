@@ -45,21 +45,27 @@ export default class Elevator extends React.PureComponent {
       onCloseDoorWithSomeDelay
     } = this.props;
 
+    // If we have received requests the go to that floor
     if (!isMoving && nextProps.elevatorState.isMoving) {
       const nextTargetBottom = (nextProps.elevatorState.nextStop - 1)*floorHeight;
       this.animate(nextTargetBottom);
       return;
     }
 
+    // we have reached destination floor
     if (isMoving && !nextProps.elevatorState.isMoving) {
       window.cancelAnimationFrame(this.motionTimerId);
     }
 
+    // wait for passenger onboarding and close door after that
+    // which eventually sets isMoving = true and animation get started again
     if (!shouldOpenDoor && nextProps.elevatorState.shouldOpenDoor) {
       onCloseDoorWithSomeDelay(id, timeToCloseDoor);
       return;
     }
 
+    // we have received a request while moving
+    // change the destination floor
     if (nextStop !== nextProps.elevatorState.nextStop) {
       window.cancelAnimationFrame(this.motionTimerId);
       const nextTargetBottom = (nextProps.elevatorState.nextStop - 1)*floorHeight;

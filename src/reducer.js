@@ -162,10 +162,13 @@ function handleUpdateCurrentFloor(state, action) {
     boardingRequest.floorLevel !== currentFloor ||
     boardingRequest.direction !== direction);
 
+  // If length is not equal that means we have reached destination floor or served boarding request
   const shouldOpenDoor = nextDestinationRequests.length !== destinationRequests.length ||
     nextBoardingRequests.length !== state.boardingRequests.length;
 
   let newState = state;
+
+  // If there are no request set elevator state idle
   if (nextBoardingRequests.length === 0 &&
     nextDestinationRequests.length === 0) {
 
@@ -177,14 +180,16 @@ function handleUpdateCurrentFloor(state, action) {
       isMoving: false
     });
   } else if (nextDestinationRequests.length === 0) {
-    const nextElevatorState = {
+    // If elevator is empty then serve nearest floor's onboarding request
+    const nearestFloor = getNearestOnboardingFloor(nextBoardingRequests, {
       direction,
       currentFloor
-    }
-
-    const nearestFloor = getNearestOnboardingFloor(nextBoardingRequests, nextElevatorState);
+    });
 
     let nextDirection = direction;
+
+    // If nearest floor is same floor
+    // It means we have opposite direction request from same floor
     if (nearestFloor === currentFloor) {
       nextBoardingRequests = nextBoardingRequests.filter((request) =>
         request.floorLevel !== currentFloor);
@@ -205,10 +210,13 @@ function handleUpdateCurrentFloor(state, action) {
       shouldOpenDoor
     });
   } else {
+    // If we have some passengers in elevator
+    // Find nearest destination and intermediate boarding requests (between current floor and nearest destination)
     const nearestDestination = getNearestDestination(elevatorState, destinationRequests);
     const nearestIntermediateBoardingReq = getNearestIntermediateBoardingRequest(nextBoardingRequests, elevatorState, nearestDestination);
     let nextStop = nearestDestination;
     
+    // if we have intermediate boarding request then go to that floor first
     if (nearestIntermediateBoardingReq !== -1) {
       nextStop = nearestIntermediateBoardingReq;
     }
@@ -289,6 +297,13 @@ function canGoToFloor(elevatorState, floor) {
   return currentFloor !== floor;
 }
 
+/* 
+* It checks floors IN following order
+* 1) check floors in the same direction with same direction request
+* 2) check if floors in same direction with opp direction request
+* 3) check if floors in opposite direction with opposite direction request
+* 4) check if floos in opposite direction with same direction request
+*/
 function getNearestOnboardingFloor(boardingRequests, elevatorState) {
   const { direction } = elevatorState;
   const floorsToVisitInSameDirection = boardingRequests.filter(request =>
