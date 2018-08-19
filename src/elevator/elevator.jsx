@@ -1,8 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import * as directions from '../directions';
 import ElevatorButton from './elevatorButton';
 
-const timeToCloseDoor = 200;
+const timeToCloseDoor = 1000;
 
 export default class Elevator extends React.PureComponent {
   static propTypes = {
@@ -51,7 +52,7 @@ export default class Elevator extends React.PureComponent {
     }
 
     if (isMoving && !nextProps.elevatorState.isMoving) {
-      cancelAnimationFrame(this.motionTimerId);
+      window.cancelAnimationFrame(this.motionTimerId);
     }
 
     if (!shouldOpenDoor && nextProps.elevatorState.shouldOpenDoor) {
@@ -60,7 +61,7 @@ export default class Elevator extends React.PureComponent {
     }
 
     if (nextStop !== nextProps.elevatorState.nextStop) {
-      cancelAnimationFrame(this.motionTimerId);
+      window.cancelAnimationFrame(this.motionTimerId);
       const nextTargetBottom = (nextProps.elevatorState.nextStop - 1)*floorHeight;
       this.animate(nextTargetBottom);
     }
@@ -70,14 +71,17 @@ export default class Elevator extends React.PureComponent {
     const {
       id,
       elevatorState: {
-        currentFloor
+        currentFloor,
+        direction,
       },
       floorHeight,
       onUpdateCurrentFloor
     } = this.props;
 
     const { bottom } = this.state;
-    const nextFloor = Math.floor(bottom/floorHeight) + 1;
+    const nextFloor = direction === directions.UP ?
+      Math.floor(bottom/floorHeight) + 1 :
+      Math.ceil(bottom/floorHeight) + 1;
   
     if (currentFloor !== nextFloor) {
       onUpdateCurrentFloor(id, nextFloor);
@@ -103,14 +107,14 @@ export default class Elevator extends React.PureComponent {
       return;
     }
 
-    const direction = bottom < targetBottom ? 1 : -1;
-    this.motionTimerId = requestAnimationFrame(() => {
-      this.setState(prevState => ({
-        bottom: prevState.bottom + direction * floorHeight/50
-      }));
-
+    this.motionTimerId = window.requestAnimationFrame(() => {
       this.animate(targetBottom);
     });
+
+    const direction = bottom < targetBottom ? 1 : -1;
+    this.setState(prevState => ({
+      bottom: prevState.bottom + direction * floorHeight/50
+    }));
   }
 
   getStyle() {
